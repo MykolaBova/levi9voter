@@ -52,6 +52,7 @@ parameters:
             domain_controllers : [ levi9.com ] #Servers to use for ldap connection (Random)
             admin_username: #Null to use the userConnection
             admin_password: #Null to use the userConnection
+            admin_emails: [m.popova@levi9.com, a.trikopa@levi9.com, o.volkov@levi9.com, m.labinskyi@levi9.com]
             real_primarygroup : true #For Linux compatibility.
             use_ssl : false #Set it true need configuration of the server to be useful
             use_tls : false #Set it true need configuration of the server to be useful
