@@ -128,24 +128,17 @@ class UserProvider extends AdUserProvider
         $userCollection = $adLdap->user()->infoCollection($user->getUsername(), array('*'));
 
         if ($userCollection) {
-            $groups = $adLdap->user()->groups($user->getUsername(), $this->recursiveGrouproles);
-            $sfRoles = array();
-            $sfRolesTemp = array();
-            foreach ($groups as $r) {
-                if (in_array($r, $sfRolesTemp) === false) {
-                    $sfRoles[] = 'ROLE_' . strtoupper(str_replace(' ', '_', $r));
-                    $sfRolesTemp[] = $r;
-                }
-            }
-            $user->setRoles($sfRoles);
-            unset($sfRolesTemp);
-
             $user->setDisplayName($userCollection->displayName);
             $user->setUuid($adLdap->utilities()->decodeGuid($userCollection->objectguid));
             $user->setEmail($userCollection->mail);
-            $user->setRoles(['ROLE_USER']);
             $user->setPassword($token->getCredentials());
-            
+
+            $roles = ['ROLE_USER'];
+            if (in_array($userCollection->mail, $this->config['admin_emails'], true)) {
+                $roles[] = 'ROLE_ADMIN';
+            }
+            $user->setRoles($roles);
+
             return true;
         }
         return false;
