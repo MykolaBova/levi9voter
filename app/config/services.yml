@@ -56,10 +56,6 @@ services:
         class:  AppBundle\Services\UserService
         arguments: [ @user_repository ]
 
-    login_success_handler:
-        class:      AppBundle\Security\Authentication\Handler\LoginSuccessHandler
-        arguments:  [@security.http_utils, @user_service, []]
-
     security.access.post_voter:
         class:      AppBundle\Security\Authorization\Voter\PostVoter
         public:     false

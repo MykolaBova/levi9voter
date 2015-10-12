@@ -4,19 +4,38 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\User;
 use AppBundle\Repository\UserRepository;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserService
 {
+    /**
+     * @var UserRepository
+     */
     private $userRepository;
 
+    /**
+     * @param UserRepository $userRepository
+     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function importAuthenticatedUser(UsernamePasswordToken $token)
+    /**
+     * @param string $username
+     * @return User|null
+     */
+    public function findUserByUsername($username)
     {
-        $this->userRepository->importAuthenticatedUser($token->getUser());
+        return $this->userRepository->findOneByUsername($username);
+    }
+
+    /**
+     * Save User entity filled with LDAP data
+     *
+     * @param User $user
+     */
+    public function saveLDAPUserData(User $user)
+    {
+        $this->userRepository->saveUser($user);
     }
 }

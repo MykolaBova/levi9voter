@@ -26,28 +26,14 @@ use AppBundle\Entity\User;
 class UserRepository extends EntityRepository
 {
     /**
-     * Inserts data of authenticated user to User table
-     * if user has already been inserted then this function
-     * updates following db values: display_name, manager_id, title
+     * Saves User entity
      *
      * @param User $user
-     * @throws \Doctrine\DBAL\DBALException
      */
-    public function importAuthenticatedUser(User $user)
+    public function saveUser(User $user)
     {
-        $this->getEntityManager()
-            ->getConnection()
-            ->executeQuery(
-                'INSERT OR IGNORE INTO user(username, email, uuid, password, displayName, roles)
-                    VALUES(:username, :email, :uuid, :password, :displayName, :roles)',
-                [
-                    'username' => $user->getUsername(),
-                    'email' => $user->getEmail(),
-                    'uuid' => $user->getUuid(),
-                    'password' => md5(microtime()),
-                    'displayName' => $user->getDisplayName(),
-                    'roles' => ''
-                ]
-            );
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
     }
 }

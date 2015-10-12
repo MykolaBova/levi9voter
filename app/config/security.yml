@@ -30,7 +30,6 @@ security:
             active_directory:
                 login_path: security_login_form
                 check_path: security_login_check
-                success_handler: login_success_handler
             remember_me:
                 key:      "%secret%"
                 lifetime: 31536000 # 365 days in seconds

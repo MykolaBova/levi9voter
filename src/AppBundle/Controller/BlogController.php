@@ -24,9 +24,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Intl\Intl;
 use AppBundle\Entity\Vote;
 use AppBundle\Entity\Category;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Controller used to manage blog contents in the public part of the site.
@@ -134,20 +134,15 @@ class BlogController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // todo: we need to have user from database in session
-            $user = $this->getDoctrine()
-                ->getRepository('AppBundle:User')
-                ->findOneByEmail($this->getUser()->getEmail());
-
             /** @var Comment $comment */
             $comment = $form->getData();
-            $comment->setUser($user)
+            $comment->setUser($this->getUser())
                 ->setPost($post)
                 ->setPublishedAt(new \DateTime());
 
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
-            $em->persist($comment);
+            $em->merge($comment);
             $em->flush();
 
             return $this->redirectToRoute('blog_post', array('slug' => $post->getSlug()));
