@@ -3,6 +3,7 @@
 namespace AppBundle\Security\User;
 
 use AppBundle\Entity\User;
+use AppBundle\Services\UserService;
 use Symfony\Component\Translation\Translator;
 use Riper\Security\ActiveDirectoryBundle\Security\User\AdUser;
 use Riper\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
@@ -23,12 +24,31 @@ class UserProvider extends AdUserProvider
      */
     private $translator;
 
+    /**
+     * @var array
+     */
     private $config = array();
 
-    public function __construct(array $config, AdldapService $adLdapService, TranslatorInterface $translator)
-    {
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @param array $config
+     * @param AdldapService $adLdapService
+     * @param TranslatorInterface $translator
+     * @param UserService $userService
+     */
+    public function __construct(
+        array $config,
+        AdldapService $adLdapService,
+        TranslatorInterface $translator,
+        UserService $userService
+    ) {
         $this->config = $config;
         $this->translator = $translator;
+        $this->userService = $userService;
 
         $this->recursiveGrouproles = $this->getConfig('recursive_grouproles', false);
         $usernamePatterns = $this->getConfig('username_patterns', array());
@@ -54,11 +74,14 @@ class UserProvider extends AdUserProvider
         // The password is set to something impossible to find.
         try {
             $userString = $this->getUsernameFromString($username);
-            $user = new User(
-                $this->getUsernameFromString($userString),
-                uniqid('_', true) . mt_rand(0, 424242),
-                array()
-            );
+            $user = $this->userService->findUserByUsername($userString);
+            if (!$user) {
+                $user = new User(
+                    $this->getUsernameFromString($userString),
+                    uniqid('_', true) . mt_rand(0, 424242),
+                    array()
+                );
+            }
         } catch (\InvalidArgumentException $e) {
             $msg = $this->translator->trans(
                 'riper.security.active_directory.invalid_user',
@@ -138,9 +161,11 @@ class UserProvider extends AdUserProvider
                 $roles[] = 'ROLE_ADMIN';
             }
             $user->setRoles($roles);
+            $this->userService->saveLDAPUserData($user);
 
             return true;
         }
+
         return false;
     }
 

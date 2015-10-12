@@ -66,9 +66,16 @@ class User extends AdUser
      */
     private $roles = array();
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @param array $roles
+     */
     public function __construct($username = '', $password = '', array $roles = [])
     {
         parent::__construct($username, $password, $roles);
+
+        $this->setUsername($username);
     }
 
     public function getId()
@@ -76,11 +83,11 @@ class User extends AdUser
         return $this->id;
     }
 
-//    public function getUsername()
-//    {
-//        return $this->username;
-//    }
-//
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
     public function setUsername($username)
     {
         $this->username = $username;
