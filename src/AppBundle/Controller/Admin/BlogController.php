@@ -213,10 +213,10 @@ class BlogController extends Controller
         $this->denyAccessUnlessGranted(PostVoter::CLOSE, $post);
 
         switch ($state) {
-            case ACTION_APPROVE:
+            case self::ACTION_APPROVE:
                 $state = Post::STATUS_APPROVED;
                 break;
-            case ACTION_REJECT:
+            case self::ACTION_REJECT:
                 $state = Post::STATUS_REJECTED;
                 break;
             default:
