@@ -42,7 +42,9 @@ class User extends AdUser
     private $uuid;
 
     /**
-     * @ORM\Column(type="string")
+     * We don't need to store the password in database
+     *
+     * @var string
      */
     private $password;
 
