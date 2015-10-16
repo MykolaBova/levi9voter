@@ -262,7 +262,7 @@ class Post
      */
     public function isAuthor(User $user = null)
     {
-        return $this->author === $user;
+        return $this->author->getUuid() == $user->getUuid();
     }
 
     /**
