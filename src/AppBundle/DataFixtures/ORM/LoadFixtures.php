@@ -88,17 +88,22 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $manager->persist($user);
         $manager->flush();
 
+        $author = $manager->getRepository('AppBundle:User')->findOneBy([
+            'email' => 'a.martynenko@levi9.com'
+        ]);
+
         foreach (range(1, 5) as $i) {
             $post = new Post();
 
-            $post->setTitle($this->getRandomPostTitle());
-            $post->setSummary($this->getRandomPostSummary());
-            $post->setSlug($this->container->get('slugger')->slugify($post->getTitle()));
-            $post->setContent($this->getPostContent());
-            $post->setAuthorEmail('a.martynenko@levi9.com');
-            $post->setPublishedAt(new \DateTime('now - '.$i.'days'));
-            $post->setState($this->getRandomState());
-            $post->setCategory($category);
+            $post
+                ->setTitle($this->getRandomPostTitle())
+                ->setSummary($this->getRandomPostSummary())
+                ->setSlug($this->container->get('slugger')->slugify($post->getTitle()))
+                ->setContent($this->getPostContent())
+                ->setAuthor($author)
+                ->setPublishedAt(new \DateTime('now - '.$i.'days'))
+                ->setState($this->getRandomState())
+                ->setCategory($category);
 
             foreach (range(1, 5) as $j) {
                 $comment = new Comment();

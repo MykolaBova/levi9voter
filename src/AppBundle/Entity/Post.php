@@ -37,6 +37,8 @@ class Post
     const VOTING_MOST_POPULAR = 1;
 
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -44,41 +46,55 @@ class Post
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     private $title;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string")
      */
     private $slug;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="post.blank_summary")
      */
     private $summary;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text")
      * @Assert\Length(min = "10", minMessage = "post.too_short_content")
      */
     private $content;
 
     /**
-     * @ORM\Column(type="string")
-     * @Assert\Email()
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $authorEmail;
+    private $author;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      */
     private $publishedAt;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(
      *      targetEntity="Comment",
      *      mappedBy="post",
@@ -89,12 +105,16 @@ class Post
     private $comments;
 
     /**
+     * @var Category
+     *
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(
      *      targetEntity="Vote",
      *      mappedBy="post",
@@ -118,7 +138,7 @@ class Post
     }
 
     /**
-     * @return mixed
+     * @return Category
      */
     public function getCategory()
     {
@@ -126,56 +146,111 @@ class Post
     }
 
     /**
-     * @param mixed $category
+     * @param Category $category
+     *
+     * @return $this
      */
     public function setCategory(Category $category = null)
     {
         $this->category = $category;
+
+        return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSlug()
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     *
+     * @return $this
+     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @param string $content
+     *
+     * @return $this
+     */
     public function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
     }
 
+    /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     *
+     * @return $this
+     */
+    public function setAuthor(User $author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAuthorEmail()
     {
-        return $this->authorEmail;
-    }
-
-    public function setAuthorEmail($authorEmail)
-    {
-        $this->authorEmail = $authorEmail;
+        return $this->author->getEmail();
     }
 
     /**
@@ -187,73 +262,140 @@ class Post
      */
     public function isAuthor(User $user = null)
     {
-        return $user->getEmail() == $this->getAuthorEmail();
+        return $this->author === $user;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getPublishedAt()
     {
         return $this->publishedAt;
     }
 
-    public function setPublishedAt($publishedAt)
+    /**
+     * @param \DateTime $publishedAt
+     *
+     * @return $this
+     */
+    public function setPublishedAt(\DateTime $publishedAt)
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getComments()
     {
         return $this->comments;
     }
 
+    /**
+     * @param Comment $comment
+     *
+     * @return $this
+     */
     public function addComment(Comment $comment)
     {
         $this->comments->add($comment);
         $comment->setPost($this);
+
+        return $this;
     }
 
+    /**
+     * @param Comment $comment
+     *
+     * @return $this
+     */
     public function removeComment(Comment $comment)
     {
         $this->comments->removeElement($comment);
         $comment->setPost(null);
+
+        return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getVotes()
     {
         return $this->votes;
     }
 
+    /**
+     * @param Vote $vote
+     *
+     * @return $this
+     */
     public function addVote(Vote $vote)
     {
         $this->votes->add($vote);
         $vote->setPost($this);
+
+        return $this;
     }
 
+    /**
+     * @param Vote $vote
+     *
+     * @return $this
+     */
     public function removeVote(Vote $vote)
     {
         $this->votes->removeElement($vote);
         $vote->setPost(null);
+
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSummary()
     {
         return $this->summary;
     }
 
+    /**
+     * @param string $summary
+     *
+     * @return $this
+     */
     public function setSummary($summary)
     {
         $this->summary = $summary;
+
+        return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getState()
     {
         return $this->state;
     }
 
+    /**
+     * @param int $state
+     *
+     * @return $this
+     */
     public function setState($state)
     {
         $this->state = $state;
+
+        return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getAgreeCount()
     {
         $agree = 0;
@@ -265,6 +407,9 @@ class Post
         return $agree;
     }
 
+    /**
+     * @return int
+     */
     public function getNotAgreeCount()
     {
         $notAgree = 0;
