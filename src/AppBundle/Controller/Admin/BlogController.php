@@ -18,6 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Post;
+use AppBundle\Security\Authorization\Voter\PostVoter;
+use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 /**
  * Controller used to manage blog contents in the backend.
@@ -53,8 +55,9 @@ class BlogController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $posts = $em->getRepository('AppBundle:Post')->findBy([
-            'authorEmail' => $this->getUser()->getEmail(),
+        $posts = $this->getUser()->isAdmin()
+            ? $em->getRepository('AppBundle:Post')->findLatestBackend(Post::NUM_ITEMS, $this->getUser()->getEmail())
+            : $em->getRepository('AppBundle:Post')->findBy(['authorEmail' => $this->getUser()->getEmail(),
         ]);
 
         return $this->render('admin/blog/index.html.twig', array('posts' => $posts));
@@ -112,12 +115,7 @@ class BlogController extends Controller
      */
     public function showAction(Post $post)
     {
-        // This security check can also be performed:
-        //   1. Using an annotation: @Security("post.isAuthor(user)")
-        //   2. Using a "voter" (see http://symfony.com/doc/current/cookbook/security/voters_data_permission.html)
-        if (null === $this->getUser() || !$post->isAuthor($this->getUser())) {
-            throw $this->createAccessDeniedException('Posts can only be shown to their authors.');
-        }
+        $this->denyAccessUnlessGranted(PostVoter::VIEW, $post);
 
         $deleteForm = $this->createDeleteForm($post);
 
@@ -136,12 +134,8 @@ class BlogController extends Controller
      */
     public function editAction(Post $post, Request $request)
     {
-        if (null === $this->getUser() || !$post->isAuthor($this->getUser())) {
-            throw $this->createAccessDeniedException('Posts can only be edited by their authors.');
-        }
-
-        if ($post->getState() !== Post::STATUS_DRAFT) {
-            return $this->redirectToRoute('admin_post_index');
+        if (!$this->isGranted(PostVoter::EDIT, $post)) {
+            return $this->redirectToRoute('admin_post_show', array('id' => $post->getId()));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -175,7 +169,7 @@ class BlogController extends Controller
      *
      * @Route("/{id}", name="admin_post_delete")
      * @Method("DELETE")
-     * @Security("post.isAuthor(user)")
+     * @Security("has_role('ROLE_USER')")
      *
      * The Security annotation value is an expression (if it evaluates to false,
      * the authorization mechanism will prevent the user accessing this resource).
@@ -183,6 +177,8 @@ class BlogController extends Controller
      */
     public function deleteAction(Request $request, Post $post)
     {
+        $this->denyAccessUnlessGranted(PostVoter::DELETE, $post);
+
         $form = $this->createDeleteForm($post);
         $form->handleRequest($request);
 
@@ -194,6 +190,32 @@ class BlogController extends Controller
         }
 
         return $this->redirectToRoute('admin_post_index');
+    }
+
+    /**
+     * @Route("/{id}/close/{state}", name="admin_post_close")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function approveAction(Request $request, Post $post, $state)
+    {
+        $this->denyAccessUnlessGranted(PostVoter::CLOSE, $post);
+
+        if ($state == 'approve') {
+            $state = Post::STATUS_APPROVED;
+        } elseif ($state == 'reject') {
+            $state = Post::STATUS_REJECTED;
+        } else {
+            throw new InvalidArgumentException();
+        }
+
+        $post->setState($state);
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($post);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_post_show', array('id' => $post->getId()));
     }
 
     /**

@@ -55,7 +55,7 @@ class PostRepository extends EntityRepository
     public function findByVoting($type, $limit = Post::NUM_ITEMS)
     {
         if ($type == Post::VOTING_MOST_RATED) {
-            $postsCollection =  $this->findMostRated($limit);
+            $postsCollection = $this->findMostRated($limit);
         } else {
             $postsCollection = $this->findMostPopular($limit);
         }
@@ -100,6 +100,22 @@ class PostRepository extends EntityRepository
             ->andWhere('p.state != :review')->setParameter('review', Post::STATUS_REVIEW)
             ->orderBy('votesCount', 'DESC')
             ->groupBy('p.id')
+            ->setMaxResults($limit);
+
+        return $builder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findLatestBackend($limit = Post::NUM_ITEMS, $authorEmail = null)
+    {
+        $builder =  $this
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.publishedAt <= :now')->setParameter('now', new \DateTime())
+            ->andWhere('p.state != :draft')->setParameter('draft', Post::STATUS_DRAFT)
+            ->orWhere('p.authorEmail = :authorEmail')->setParameter('authorEmail', $authorEmail)
+            ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit);
 
         return $builder

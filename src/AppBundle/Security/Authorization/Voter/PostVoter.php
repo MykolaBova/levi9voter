@@ -15,6 +15,8 @@ class PostVoter extends AbstractVoter
     const VIEW = 'view';
     const EDIT = 'edit';
     const VOTE = 'vote';
+    const DELETE = 'delete';
+    const CLOSE = 'close';
 
     /**
      * {@inheritdoc}
@@ -35,6 +37,8 @@ class PostVoter extends AbstractVoter
             self::VIEW,
             self::EDIT,
             self::VOTE,
+            self::DELETE,
+            self::CLOSE,
         ];
     }
 
@@ -54,6 +58,10 @@ class PostVoter extends AbstractVoter
                 return $this->isEditGranted($object, $user);
             case self::VOTE:
                 return Post::STATUS_VOTING === $object->getState();
+            case self::DELETE:
+                return $this->isDeleteGranted($object, $user);
+            case self::CLOSE:
+                return Post::STATUS_VOTING === $object->getState() && $user->isAdmin();
         }
 
         return false;
@@ -94,6 +102,24 @@ class PostVoter extends AbstractVoter
         switch ($post->getState()) {
             case Post::STATUS_DRAFT:
                 return $post->isAuthor($user);
+            case Post::STATUS_REVIEW:
+                return $user->isAdmin();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Post $post
+     * @param User $user
+     *
+     * @return bool
+     */
+    private function isDeleteGranted(Post $post, User $user)
+    {
+        switch ($post->getState()) {
+            case Post::STATUS_DRAFT:
+                return $post->isAuthor($user) || $user->isAdmin();
             case Post::STATUS_REVIEW:
                 return $user->isAdmin();
         }
