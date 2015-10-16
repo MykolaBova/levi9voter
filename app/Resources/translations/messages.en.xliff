@@ -295,6 +295,18 @@
                 <source>flash.vote.not-agree</source>
                 <target>You voted against this proposal!</target>
             </trans-unit>
+            <trans-unit id="action.edit_comment">
+                <source>action.edit_comment</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="action.delete_comment">
+                <source>action.delete_comment</source>
+                <target>Delete comment</target>
+            </trans-unit>
+            <trans-unit id="flash.comment.deleted">
+                <source>flash.comment.deleted</source>
+                <target>Comment has been deleted</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

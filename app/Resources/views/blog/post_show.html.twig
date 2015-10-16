@@ -49,6 +49,9 @@
             <h4 class="col-sm-3">
                 <strong>{{ comment.user.displayName ? comment.user.displayName : comment.user.email }}</strong> {{ 'post.commented_on'|trans }}
                 <strong>{{ comment.publishedAt|localizeddate('medium', 'short') }}</strong>
+                {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('comment_delete', { comment: comment.id}) }}">{{ 'action.delete_comment'|trans }}</a>
+                {% endif %}
             </h4>
             <div class="col-sm-9">
                 {{ comment.content|md2html }}
