@@ -155,6 +155,23 @@ class BlogController extends Controller
     }
 
     /**
+     * @Route("/comment/{comment}/delete", name = "comment_delete")
+     * @Security("is_granted('ROLE_ADMIN')")
+     *
+     * @ParamConverter("comment", options={"mapping": {"comment": "id"}})
+     */
+    public function commentDeleteAction(Request $request, Comment $comment)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($comment);
+        $em->flush();
+
+        $this->addFlash(FlashbagTypeEnum::SUCCESS, $this->get('translator')->trans('flash.comment.deleted'));
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
      * This controller is called directly via the render() function in the
      * blog/post_show.html.twig template. That's why it's not needed to define
      * a route name for it.

@@ -64,6 +64,7 @@ class PostRepository extends EntityRepository
 
         if ($user->isAdmin()) {
             $builder->where('p.state != :draft')->setParameter('draft', Post::STATUS_DRAFT);
+            $builder->orWhere('p.author = :author')->setParameter('author', $user);
         } else {
             $builder->where('p.author = :author')->setParameter('author', $user);
         }
@@ -76,7 +77,7 @@ class PostRepository extends EntityRepository
     public function findByVoting($type, $limit = Post::NUM_ITEMS)
     {
         if ($type == Post::VOTING_MOST_RATED) {
-            $postsCollection =  $this->findMostRated($limit);
+            $postsCollection = $this->findMostRated($limit);
         } else {
             $postsCollection = $this->findMostPopular($limit);
         }
