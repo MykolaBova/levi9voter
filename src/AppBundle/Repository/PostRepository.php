@@ -11,6 +11,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Post;
 use Doctrine\ORM\Query\Expr\Join;
@@ -50,6 +51,27 @@ class PostRepository extends EntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Post[]
+     */
+    public function findAccessible(User $user)
+    {
+        $builder = $this->createQueryBuilder('p');
+
+        if ($user->isAdmin()) {
+            $builder->where('p.state != :draft')->setParameter('draft', Post::STATUS_DRAFT);
+            $builder->orWhere('p.author = :author')->setParameter('author', $user);
+        } else {
+            $builder->where('p.author = :author')->setParameter('author', $user);
+        }
+
+        $builder->orderBy('p.publishedAt', 'DESC');
+
+        return $builder->getQuery()->getResult();
     }
 
     public function findByVoting($type, $limit = Post::NUM_ITEMS)
@@ -100,22 +122,6 @@ class PostRepository extends EntityRepository
             ->andWhere('p.state != :review')->setParameter('review', Post::STATUS_REVIEW)
             ->orderBy('votesCount', 'DESC')
             ->groupBy('p.id')
-            ->setMaxResults($limit);
-
-        return $builder
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findLatestBackend($limit = Post::NUM_ITEMS, $authorEmail = null)
-    {
-        $builder =  $this
-            ->createQueryBuilder('p')
-            ->select('p')
-            ->where('p.publishedAt <= :now')->setParameter('now', new \DateTime())
-            ->andWhere('p.state != :draft')->setParameter('draft', Post::STATUS_DRAFT)
-            ->orWhere('p.authorEmail = :authorEmail')->setParameter('authorEmail', $authorEmail)
-            ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit);
 
         return $builder

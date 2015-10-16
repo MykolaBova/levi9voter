@@ -11,6 +11,7 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\User;
 use AppBundle\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,6 +37,9 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  */
 class BlogController extends Controller
 {
+    const ACTION_APPROVE = 'approve';
+    const ACTION_REJECT = 'reject';
+
     /**
      * Lists all Post entities.
      *
@@ -54,11 +58,13 @@ class BlogController extends Controller
      */
     public function indexAction()
     {
+        // todo: we need to have user from database in session
+        $user = $this->getDoctrine()
+            ->getRepository('AppBundle:User')
+            ->findOneByEmail($this->getUser()->getEmail());
+
         $em = $this->getDoctrine()->getManager();
-        $posts = $this->getUser()->isAdmin()
-            ? $em->getRepository('AppBundle:Post')->findLatestBackend(Post::NUM_ITEMS, $this->getUser()->getEmail())
-            : $em->getRepository('AppBundle:Post')->findBy(['authorEmail' => $this->getUser()->getEmail(),
-        ]);
+        $posts = $em->getRepository('AppBundle:Post')->findAccessible($user);
 
         return $this->render('admin/blog/index.html.twig', array('posts' => $posts));
     }
@@ -77,7 +83,6 @@ class BlogController extends Controller
     public function newAction(Request $request)
     {
         $post = new Post();
-        $post->setAuthorEmail($this->getUser()->getEmail());
         $form = $this->createForm(new PostType(), $post);
 
         $form->handleRequest($request);
@@ -87,6 +92,12 @@ class BlogController extends Controller
         // However, we explicitly add it to improve code readability.
         // See http://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
+            // todo: we need to have user from database in session
+            $user = $this->getDoctrine()
+                ->getRepository('AppBundle:User')
+                ->findOneByEmail($this->getUser()->getEmail());
+
+            $post->setAuthor($user);
             $post->setSlug($this->get('slugger')->slugify($post->getTitle()));
 
             if ($request->request->has('publish')) {
@@ -201,12 +212,15 @@ class BlogController extends Controller
     {
         $this->denyAccessUnlessGranted(PostVoter::CLOSE, $post);
 
-        if ($state == 'approve') {
-            $state = Post::STATUS_APPROVED;
-        } elseif ($state == 'reject') {
-            $state = Post::STATUS_REJECTED;
-        } else {
-            throw new InvalidArgumentException();
+        switch ($state) {
+            case ACTION_APPROVE:
+                $state = Post::STATUS_APPROVED;
+                break;
+            case ACTION_REJECT:
+                $state = Post::STATUS_REJECTED;
+                break;
+            default:
+                throw new InvalidArgumentException();
         }
 
         $post->setState($state);
