@@ -18,7 +18,7 @@
                 <i class="fa fa-thumbs-down"></i>({{ post.notAgreeCount }})
             </span>
 
-            {{ post.summary|md2html }}
+            {{ post.summary|md2html|nl2br }}
         </article>
     {% endfor %}
 {% endblock %}

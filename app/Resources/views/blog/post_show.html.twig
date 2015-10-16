@@ -8,7 +8,7 @@
         <span class="label label-{{ state_classes[post.state] }}">{{ ('post.state.'~post.state)|trans }}</span>
     </h1>
 
-    {{ post.content|md2html }}
+    {{ post.content|md2html|nl2br }}
 
     {% if is_granted('vote', post) %}
     <div id="post-add-comment" class="well">
@@ -54,7 +54,7 @@
                 {% endif %}
             </h4>
             <div class="col-sm-9">
-                {{ comment.content|md2html }}
+                {{ comment.content|md2html|nl2br }}
             </div>
         </div>
     {% else %}
