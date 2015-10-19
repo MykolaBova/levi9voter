@@ -30,7 +30,7 @@ class Markdown
 
     public function toHtml($text)
     {
-        $html = $this->parser->text($text);
+        $html = nl2br($this->parser->text($text));
 
         return $html;
     }
