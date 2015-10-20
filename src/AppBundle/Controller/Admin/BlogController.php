@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Post;
 use AppBundle\Security\Authorization\Voter\PostVoter;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Controller used to manage blog contents in the backend.
@@ -220,7 +220,7 @@ class BlogController extends Controller
                 $state = Post::STATUS_REJECTED;
                 break;
             default:
-                throw new InvalidArgumentException();
+                throw new BadRequestHttpException();
         }
 
         $post->setState($state);

@@ -168,7 +168,7 @@ class BlogController extends Controller
 
         $this->addFlash(FlashbagTypeEnum::SUCCESS, $this->get('translator')->trans('flash.comment.deleted'));
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('blog_index'));
     }
 
     /**
