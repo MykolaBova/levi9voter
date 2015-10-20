@@ -96,6 +96,10 @@
                 <source>label.publish_post</source>
                 <target>Publish vote</target>
             </trans-unit>
+            <trans-unit id="label.review_post">
+                <source>label.review_post</source>
+                <target>Ready for review</target>
+            </trans-unit>
             <trans-unit id="action.back_to_list">
                 <source>action.back_to_list</source>
                 <target>Back to the vote list</target>

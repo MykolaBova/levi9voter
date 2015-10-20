@@ -42,13 +42,6 @@ class User extends AdUser
     private $uuid;
 
     /**
-     * We don't need to store the password in database
-     *
-     * @var string
-     */
-    private $password;
-
-    /**
      * @ORM\Column(type="string")
      */
     private $displayName;
@@ -103,16 +96,6 @@ class User extends AdUser
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
     }
 
     /**

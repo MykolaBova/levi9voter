@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Post;
 use AppBundle\Security\Authorization\Voter\PostVoter;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Controller used to manage blog contents in the backend.
@@ -100,9 +100,7 @@ class BlogController extends Controller
             $post->setAuthor($user);
             $post->setSlug($this->get('slugger')->slugify($post->getTitle()));
 
-            if ($request->request->has('publish')) {
-                $post->setState(Post::STATUS_VOTING);
-            }
+            $this->changePostState($request, $post);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
@@ -159,9 +157,7 @@ class BlogController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $post->setSlug($this->get('slugger')->slugify($post->getTitle()));
 
-            if ($request->request->has('publish')) {
-                $post->setState(Post::STATUS_VOTING);
-            }
+            $this->changePostState($request, $post);
 
             $em->flush();
 
@@ -220,7 +216,7 @@ class BlogController extends Controller
                 $state = Post::STATUS_REJECTED;
                 break;
             default:
-                throw new InvalidArgumentException();
+                throw new BadRequestHttpException();
         }
 
         $post->setState($state);
@@ -252,5 +248,18 @@ class BlogController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * @param Request $request
+     * @param Post $post
+     */
+    private function changePostState(Request $request, Post $post)
+    {
+        if ($request->request->has('review')) {
+            $post->setState(Post::STATUS_REVIEW);
+        } elseif ($request->request->has('publish') && $this->isGranted('ROLE_ADMIN')) {
+            $post->setState(Post::STATUS_VOTING);
+        }
     }
 }
