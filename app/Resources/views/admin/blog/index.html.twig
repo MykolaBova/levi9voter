@@ -18,16 +18,23 @@
         <tbody>
         {% for post in posts %}
             <tr>
-                <td>{{ post.title }}</td>
+                <td>
+                    <a href="{{ path('admin_post_show', { id: post.id }) }}">
+                        {{ post.title }}
+                    </a>
+                </td>
                 <td>{{ post.authorEmail }}</td>
                 <td>{% if post.publishedAt %}{{ post.publishedAt|localizeddate('short', 'short') }}{% endif %}</td>
                 <td><span class="label label-{{ state_classes[post.state] }}">{{ ('post.state.'~post.state)|trans }}</span></td>
                 <td>
                     <div class="item-actions">
-                        <a href="{{ path('admin_post_show', { id: post.id }) }}" class="btn btn-sm btn-default">
-                            {{ 'action.show'|trans }}
-                        </a>
-
+                        {% if is_granted('publish', post) %}
+                            <form action="{{ path('admin_post_publish', {'id': post.id}) }}" method="post" style="display: inline">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    {{ 'action.publish_post'|trans }}
+                                </button>
+                            </form>
+                        {% endif %}
                         {% if is_granted('edit', post) %}
                             <a href="{{ path('admin_post_edit', { id: post.id }) }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-edit"></i> {{ 'action.edit'|trans }}

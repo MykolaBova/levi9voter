@@ -421,4 +421,23 @@ class Post
 
         return $notAgree;
     }
+
+    /**
+     * @return $this
+     */
+    public function publish()
+    {
+        $this->setState(self::STATUS_VOTING);
+        $this->setPublishedAt(new \DateTime());
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInReview()
+    {
+        return self::STATUS_REVIEW === $this->getState();
+    }
 }

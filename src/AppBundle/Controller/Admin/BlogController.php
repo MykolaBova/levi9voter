@@ -12,6 +12,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\User;
+use AppBundle\Enum\FlashbagTypeEnum;
 use AppBundle\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -172,6 +173,30 @@ class BlogController extends Controller
     }
 
     /**
+     * @Route("/{id}/publish", name="admin_post_publish")
+     * @Method({"POST"})
+     * @Security("has_role('ROLE_USER')")
+     *
+     * @param Post $post
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function publishAction(Post $post, Request $request)
+    {
+        $this->denyAccessUnlessGranted(PostVoter::PUBLISH, $post);
+
+        $post->publish();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($post);
+        $em->flush();
+
+        $this->addFlash(FlashbagTypeEnum::SUCCESS, $this->getTranslator()->trans('flash.vote.published'));
+
+        return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('admin_index'));
+    }
+
+    /**
      * Deletes a Post entity.
      *
      * @Route("/{id}", name="admin_post_delete")
@@ -261,5 +286,13 @@ class BlogController extends Controller
         } elseif ($request->request->has('publish') && $this->isGranted('ROLE_ADMIN')) {
             $post->setState(Post::STATUS_VOTING);
         }
+    }
+
+    /**
+     * @return \Symfony\Component\Translation\DataCollectorTranslator
+     */
+    private function getTranslator()
+    {
+        return $this->get('translator');
     }
 }
