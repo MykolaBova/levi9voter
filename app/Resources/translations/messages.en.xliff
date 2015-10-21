@@ -120,6 +120,10 @@
                 <source>action.browse_admin</source>
                 <target>Browse backend</target>
             </trans-unit>
+            <trans-unit id="action.publish_post">
+                <source>action.publish_post</source>
+                <target>Publish</target>
+            </trans-unit>
 
             <trans-unit id="label.title">
                 <source>label.title</source>
@@ -326,6 +330,10 @@
             <trans-unit id="flash.vote.rejected">
                 <source>flash.vote.rejected</source>
                 <target>Vote has been rejected</target>
+            </trans-unit>
+            <trans-unit id="flash.vote.published">
+                <source>flash.vote.published</source>
+                <target>Vote has been published</target>
             </trans-unit>
         </body>
     </file>

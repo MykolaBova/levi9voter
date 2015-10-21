@@ -17,6 +17,7 @@ class PostVoter extends AbstractVoter
     const VOTE = 'vote';
     const DELETE = 'delete';
     const CLOSE = 'close';
+    const PUBLISH = 'publish';
 
     /**
      * {@inheritdoc}
@@ -39,6 +40,7 @@ class PostVoter extends AbstractVoter
             self::VOTE,
             self::DELETE,
             self::CLOSE,
+            self::PUBLISH,
         ];
     }
 
@@ -62,6 +64,8 @@ class PostVoter extends AbstractVoter
                 return $this->isDeleteGranted($object, $user);
             case self::CLOSE:
                 return Post::STATUS_VOTING === $object->getState() && $user->isAdmin();
+            case self::PUBLISH:
+                return $object->isInReview() && $user->isAdmin();
         }
 
         return false;
