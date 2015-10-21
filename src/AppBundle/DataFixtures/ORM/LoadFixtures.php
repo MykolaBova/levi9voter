@@ -51,7 +51,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $johnUser = new User();
         $johnUser->setUsername('dkiprushev');
         $johnUser->setDisplayName('Denis Kiprushev');
-        $johnUser->setEmail('d.kiprushev@levi9.com');
+        $johnUser->setEmail('d.kiprushev_fake@levi9.com');
         $encodedPassword = $passwordEncoder->encodePassword($johnUser, 'kitten');
         $johnUser->setPassword($encodedPassword);
         $johnUser->setUuid('0B353BD-A89E-475E-922E-FG26FC542824');
@@ -60,7 +60,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $annaAdmin = new User();
         $annaAdmin->setUsername('Alex Martynenko');
         $annaAdmin->setDisplayName('Alex Martynenko');
-        $annaAdmin->setEmail('a.martynenko@levi9.com');
+        $annaAdmin->setEmail('a.martynenko_fake@levi9.com');
         $annaAdmin->setRoles(array('ROLE_ADMIN'));
         $encodedPassword = $passwordEncoder->encodePassword($annaAdmin, 'kitten');
         $annaAdmin->setPassword($encodedPassword);
@@ -80,7 +80,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $user = new User();
         $user->setUsername('vvasia');
         $user->setDisplayName('Vasia Vasin');
-        $user->setEmail('v.vasin@levi9.com');
+        $user->setEmail('v.vasin_fake@levi9.com');
         $user->setUuid('uuid');
         $encodedPassword = $passwordEncoder->encodePassword($user, 'password');
         $user->setPassword($encodedPassword);
