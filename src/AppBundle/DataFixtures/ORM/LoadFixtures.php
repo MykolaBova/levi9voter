@@ -51,7 +51,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $johnUser = new User();
         $johnUser->setUsername('dkiprushev');
         $johnUser->setDisplayName('Denis Kiprushev');
-        $johnUser->setEmail('d.kiprushev_fake@levi9.com');
+        $johnUser->setEmail('fakeuser1@levi9.com');
         $encodedPassword = $passwordEncoder->encodePassword($johnUser, 'kitten');
         $johnUser->setPassword($encodedPassword);
         $johnUser->setUuid('0B353BD-A89E-475E-922E-FG26FC542824');
@@ -60,7 +60,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $annaAdmin = new User();
         $annaAdmin->setUsername('Alex Martynenko');
         $annaAdmin->setDisplayName('Alex Martynenko');
-        $annaAdmin->setEmail('a.martynenko_fake@levi9.com');
+        $annaAdmin->setEmail('fakeuser2@levi9.com');
         $annaAdmin->setRoles(array('ROLE_ADMIN'));
         $encodedPassword = $passwordEncoder->encodePassword($annaAdmin, 'kitten');
         $annaAdmin->setPassword($encodedPassword);
@@ -89,7 +89,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
 
         $author = $manager->getRepository('AppBundle:User')->findOneBy([
-            'email' => 'a.martynenko@levi9.com'
+            'email' => 'fakeuser2@levi9.com'
         ]);
 
         foreach (range(1, 5) as $i) {
@@ -118,7 +118,7 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
 
             if (rand(0, 1)) {
                 $vote = new Vote();
-                $vote->setAuthorEmail(rand(0, 1) ? 'a.martynenko@levi9.com' : 'd.kiprushev@levi9.com');
+                $vote->setAuthorEmail(rand(0, 1) ? 'fakeuser2@levi9.com' : 'fakeuser1@levi9.com');
                 $vote->setPost($post);
                 $vote->setVote(rand(0 ,1));
             }
