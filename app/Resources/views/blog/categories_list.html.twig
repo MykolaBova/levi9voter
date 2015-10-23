@@ -2,12 +2,12 @@
     <div class="section categories">
         <div class="well well-lg">
             <p>
-                Filter by category:
+                {{ 'post.category.filter.title'|trans }}
             </p>
             <ul class="list-unstyled">
                 <li>
                     <a href="{{ path('blog_index') }}">
-                        Show all
+                        {{ 'post.category.filter.all.title'|trans }}
                     </a>
                 </li>
                 {% for category in categories %}

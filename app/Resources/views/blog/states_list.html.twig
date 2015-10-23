@@ -2,12 +2,12 @@
     <div class="section states">
         <div class="well well-lg">
             <p>
-                Filter by state:
+                {{ 'post.state.filter.title'|trans }}
             </p>
             <ul class="list-unstyled">
                 <li>
                     <a href="{{ path('blog_index') }}">
-                        Show all
+                        {{ 'post.state.filter.all.title'|trans }}
                     </a>
                 </li>
                 {% for state in range(2, 4) %}
