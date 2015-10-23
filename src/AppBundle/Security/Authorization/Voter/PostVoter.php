@@ -108,6 +108,8 @@ class PostVoter extends AbstractVoter
                 return $post->isAuthor($user);
             case Post::STATUS_REVIEW:
                 return $user->isAdmin();
+            case Post::STATUS_VOTING:
+                return $user->isAdmin();
         }
 
         return false;
