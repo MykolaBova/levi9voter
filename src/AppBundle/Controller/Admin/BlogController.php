@@ -100,7 +100,7 @@ class BlogController extends Controller
 
             $post->setAuthor($user);
             $post->setSlug($this->get('slugger')->slugify($post->getTitle()));
-
+            $post->setPublishedAt(new \DateTime());
             $this->changePostState($request, $post);
 
             $em = $this->getDoctrine()->getManager();

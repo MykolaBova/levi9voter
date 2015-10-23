@@ -50,10 +50,6 @@ class PostType extends AbstractType
                 'attr' => array('rows' => 20),
                 'label' => 'label.content',
             ))
-            ->add('publishedAt', 'datetime', array(
-                'widget' => 'single_text',
-                'label' => 'label.published_at',
-            ))
         ;
     }
 
