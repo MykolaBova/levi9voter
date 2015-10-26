@@ -44,6 +44,7 @@ class PostType extends AbstractType
             ->add('category', 'entity', array(
                 'class' => 'AppBundle\Entity\Category',
                 'choice_label' => 'name',
+                'label' => 'label.category'
             ))
             ->add('summary', 'textarea', array('label' => 'label.summary'))
             ->add('content', 'textarea', array(
