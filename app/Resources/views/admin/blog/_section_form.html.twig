@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+
+    <input type="submit" name="save" value="{{ button_label|default('label.create_post'|trans) }}"
+           class="{{ button_css|default("btn btn-primary") }}" />
+
+{{ form_end(form) }}

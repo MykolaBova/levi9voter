@@ -12,7 +12,7 @@
     <input type="submit" name="save" value="{{ button_label|default('label.create_post'|trans) }}"
            class="{{ button_css|default("btn btn-primary") }}" />
 
-    {% if include_back_to_home_link is not defined or include_back_to_home_link == true %}
+    {% if is_granted('publish', post) %}
         {% if is_granted('ROLE_ADMIN') %}
             <input type="submit" name="publish" value="{{ 'label.publish_post'|trans }}"
                    class="{{ button_css|default("btn btn-success") }}" />
@@ -20,9 +20,10 @@
             <input type="submit" name="review" value="{{ 'label.review_post'|trans }}"
                    class="{{ button_css|default("btn btn-success") }}" />
         {% endif %}
-
-        <a href="{{ path('admin_post_index') }}" class="btn btn-link">
-            {{ 'action.back_to_list'|trans }}
-        </a>
     {% endif %}
+
+    <a href="{{ path('admin_post_index') }}" class="btn btn-link">
+        {{ 'action.back_to_list'|trans }}
+    </a>
+
 {{ form_end(form) }}
