@@ -13,13 +13,15 @@
 {% endblock %}
 
 {% block sidebar %}
-    <div class="section actions">
-        {{ include('admin/blog/_section_form.html.twig', {
-            form: delete_form,
-            button_label: 'action.delete_post'|trans,
-            button_css: 'btn btn-lg btn-block btn-danger'
-        }, with_context = false) }}
-    </div>
+    {% if is_granted('delete', post) %}
+        <div class="section actions">
+            {{ include('admin/blog/_section_form.html.twig', {
+                form: delete_form,
+                button_label: 'action.delete_post'|trans,
+                button_css: 'btn btn-lg btn-block btn-danger'
+            }, with_context = false) }}
+        </div>
+    {% endif %}
 
     {{ parent() }}
 
