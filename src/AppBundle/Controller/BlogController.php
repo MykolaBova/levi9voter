@@ -16,6 +16,7 @@ use AppBundle\Enum\FlashbagTypeEnum;
 use AppBundle\Entity\Post;
 use AppBundle\Form\CommentType;
 use AppBundle\Form\StateType;
+use AppBundle\Event\PostEvent;
 use AppBundle\Security\Authorization\Voter\PostVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -214,6 +215,8 @@ class BlogController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
+
+            $this->get('event_dispatcher')->dispatch('app.post.on_status_change', new PostEvent($post));
 
             return $this->redirectToRoute('blog_post', array('slug' => $post->getSlug()));
         }

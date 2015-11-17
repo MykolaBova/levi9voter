@@ -360,6 +360,22 @@
                 <source>flash.vote.published</source>
                 <target>Vote has been published</target>
             </trans-unit>
+            <trans-unit id="mail.vote.approved">
+                <source>mail.vote.approved</source>
+                <target>Vote has been approved</target>
+            </trans-unit>
+            <trans-unit id="mail.vote.rejected">
+                <source>mail.vote.rejected</source>
+                <target>Vote has been rejected</target>
+            </trans-unit>
+            <trans-unit id="mail.vote.published">
+                <source>mail.vote.published</source>
+                <target>Your vote has been published</target>
+            </trans-unit>
+            <trans-unit id="mail.vote.review">
+                <source>mail.vote.review</source>
+                <target>New vote is ready for review</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

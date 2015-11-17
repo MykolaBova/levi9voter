@@ -33,9 +33,11 @@ parameters:
     # If you don't use a real mail server, you can send emails via your Gmail account.
     # see http://symfony.com/doc/current/cookbook/email/gmail.html
     mailer_transport:  smtp
-    mailer_host:       127.0.0.1
+    mailer_host:       smtp.ki.levi9.com
     mailer_user:       ~
     mailer_password:   ~
+    mailer_settings:
+        from: no-reply@levi9.com
 
     # The code of the default language used by the application ('en' = English)
     locale: en
@@ -46,13 +48,21 @@ parameters:
     # see: http://symfony.com/doc/current/reference/configuration/framework.html#secret
     secret: 'secret_value_for_symfony_demo_application'
 
+    security.admin_emails:
+        - m.popova@levi9.com
+        - a.trikopa@levi9.com
+        - o.volkov@levi9.com
+        - m.labinskyi@levi9.com
+        - a.pirog@levi9.com
+        - i.shugaiev@levi9.com
+
     riper.security.active_directory.settings:
         account_suffix : levi9.com # without the @ at the beginning
         base_dn : OU=Users,OU=Kiev,OU=Ukraine,OU=Levi9,DC=levi9,DC=com #The DN of the domain
         domain_controllers : [ levi9.com ] #Servers to use for ldap connection (Random)
         admin_username: #Null to use the userConnection
         admin_password: #Null to use the userConnection
-        admin_emails: [m.popova@levi9.com, a.trikopa@levi9.com, o.volkov@levi9.com, m.labinskyi@levi9.com, a.pirog@levi9.com, i.shugaiev@levi9.com]
+        admin_emails: %security.admin_emails%
         real_primarygroup : true #For Linux compatibility.
         use_ssl : false #Set it true need configuration of the server to be useful
         use_tls : false #Set it true need configuration of the server to be useful
