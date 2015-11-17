@@ -46,6 +46,27 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: kernel.controller, method: registerCurrentController }
 
+    app.post_listener:
+        class:     AppBundle\EventListener\PostListener
+        arguments: [@app.service.notifier.post]
+        tags:
+            - { name: 'kernel.event_listener', event: app.post.on_status_change, method: onPostStatusChange }
+
+    app.service.mailer:
+        class:     AppBundle\Services\MailerService
+        arguments: [@mailer, %mailer_settings%]
+
+    app.service.notifier:
+        abstract:  true
+        class:     AppBundle\Services\Notification\AbstractNotifier
+        arguments: [@app.service.mailer, @templating, @translator, %security.admin_emails%]
+
+    app.service.notifier.post:
+        class:  AppBundle\Services\Notification\PostNotifier
+        parent: app.service.notifier
+        calls:
+          - [setAdminEmails, [%security.admin_emails%]]
+
     user_repository:
         class: Doctrine\ORM\EntityRepository
         factory_service: doctrine.orm.entity_manager

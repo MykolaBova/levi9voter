@@ -1,0 +1,9 @@
+{% extends 'mail/base.html.twig' %}
+
+{% block content %}
+    <p>Hi,</p>
+
+    <p>
+        New post "{{ post.getTitle }}" is ready for review.
+    </p>
+{% endblock %}

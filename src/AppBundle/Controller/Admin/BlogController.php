@@ -13,6 +13,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\User;
 use AppBundle\Enum\FlashbagTypeEnum;
+use AppBundle\Event\PostEvent;
 use AppBundle\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Post;
 use AppBundle\Security\Authorization\Voter\PostVoter;
+use AppBundle\Services\Notification\PostNotifier;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -191,6 +193,8 @@ class BlogController extends Controller
         $em->persist($post);
         $em->flush();
 
+        $this->onChangePostState($post);
+
         $this->addFlash(FlashbagTypeEnum::SUCCESS, $this->getTranslator()->trans('flash.vote.published'));
 
         return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('admin_index'));
@@ -221,6 +225,8 @@ class BlogController extends Controller
             $em->flush();
         }
 
+        //todo: post deleted notification
+
         return $this->redirectToRoute('admin_post_index');
     }
 
@@ -250,6 +256,8 @@ class BlogController extends Controller
         $em->persist($post);
         $em->flush();
 
+        $this->onChangePostState($post);
+
         return $this->redirectToRoute('admin_post_show', array('id' => $post->getId()));
     }
 
@@ -271,8 +279,7 @@ class BlogController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('admin_post_delete', array('id' => $post->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     /**
@@ -286,6 +293,16 @@ class BlogController extends Controller
         } elseif ($request->request->has('publish') && $this->isGranted('ROLE_ADMIN')) {
             $post->setState(Post::STATUS_VOTING);
         }
+
+        $this->onChangePostState($post);
+    }
+
+    /**
+     * @param Post $post
+     */
+    private function onChangePostState(Post $post)
+    {
+        $this->getDispatcher()->dispatch('app.post.on_status_change', new PostEvent($post));
     }
 
     /**
@@ -294,5 +311,13 @@ class BlogController extends Controller
     private function getTranslator()
     {
         return $this->get('translator');
+    }
+
+    /**
+     * @return \Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher
+     */
+    private function getDispatcher()
+    {
+        return $this->get('event_dispatcher');
     }
 }
