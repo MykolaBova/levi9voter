@@ -29,13 +29,11 @@ class PostListener
      */
     public function onPostStatusChange(PostEvent $event)
     {
-        /**
-         * @var Post
-         */
+        /** @var Post $post */
         $post = $event->getPost();
         switch ($post->getState()) {
             case Post::STATUS_REVIEW:
-                $this->notifier->sendPostReviewEmail($post, $this->adminEmails);
+                $this->notifier->sendPostReviewEmail($post);
                 break;
             case Post::STATUS_VOTING:
                 $this->notifier->sendPostVotingEmail($post);
