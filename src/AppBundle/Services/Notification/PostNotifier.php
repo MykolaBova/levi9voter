@@ -27,14 +27,13 @@ class PostNotifier extends AbstractNotifier
      * Send email to admins on vote in review
      *
      * @param Post  $post
-     * @param array $adminEmails
      */
-    public function sendPostReviewEmail(Post $post, $adminEmails)
+    public function sendPostReviewEmail(Post $post)
     {
         $subject = $this->translator->trans('mail.vote.review');
         $body = $this->renderView('mail/post_review.html.twig', array('post' => $post));
 
-        $this->mailer->send($adminEmails, $subject, $body);
+        $this->mailer->send($this->adminEmails, $subject, $body);
     }
 
     /**
