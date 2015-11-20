@@ -13,13 +13,13 @@
            class="{{ button_css|default("btn btn-primary") }}" />
 
     {% if is_granted('publish', post) %}
-        {% if is_granted('ROLE_ADMIN') %}
             <input type="submit" name="publish" value="{{ 'label.publish_post'|trans }}"
                    class="{{ button_css|default("btn btn-success") }}" />
-        {% else %}
-            <input type="submit" name="review" value="{{ 'label.review_post'|trans }}"
-                   class="{{ button_css|default("btn btn-success") }}" />
-        {% endif %}
+    {% endif %}
+
+    {% if post.state is constant('STATUS_DRAFT', post) %}
+        <input type="submit" name="review" value="{{ 'label.review_post'|trans }}"
+               class="{{ button_css|default("btn btn-success") }}" />
     {% endif %}
 
     <a href="{{ path('admin_post_index') }}" class="btn btn-link">

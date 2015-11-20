@@ -4,7 +4,7 @@ namespace AppBundle\Services\Notification;
 
 use AppBundle\Services\MailerService;
 use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class AbstractNotifier
@@ -22,16 +22,16 @@ abstract class AbstractNotifier
     protected $templating;
 
     /**
-     * @var DataCollectorTranslator
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
      * @param MailerService           $mailer
      * @param EngineInterface         $templating
-     * @param DataCollectorTranslator $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(MailerService $mailer, EngineInterface $templating, DataCollectorTranslator $translator)
+    public function __construct(MailerService $mailer, EngineInterface $templating, TranslatorInterface $translator)
     {
         $this->mailer = $mailer;
         $this->templating = $templating;
