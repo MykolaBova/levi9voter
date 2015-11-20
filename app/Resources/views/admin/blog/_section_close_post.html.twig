@@ -1,0 +1,10 @@
+{% if is_granted('close', post) %}
+    <div class="section">
+        <a href="{{ path('admin_post_close', { id: post.id, state: 'approve' }) }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-check"></i> {{ 'action.approve'|trans }}
+        </a>
+        <a href="{{ path('admin_post_close', { id: post.id, state: 'reject' }) }}" class="btn btn-lg btn-block btn-danger">
+            <i class="fa fa-remove"></i> {{ 'action.reject'|trans }}
+        </a>
+    </div>
+{% endif %}

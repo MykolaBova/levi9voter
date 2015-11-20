@@ -20,9 +20,6 @@
         </a>
     </div>
     {% endif %}
-    {% if is_granted('ROLE_ADMIN') and post.state == constant('AppBundle\\Entity\\Post::STATUS_VOTING') %}
-        {{ render(controller('AppBundle:Blog:stateForm', { 'id': post.id })) }}
-    {% endif %}
     <div id="post-add-comment" class="well">
         {# The 'IS_AUTHENTICATED_FULLY' role ensures that the user has entered
         his/her credentials (login + password) during this session. If he/she
@@ -73,6 +70,8 @@
             </a>
         </div>
     {% endif %}
+
+    {% include "admin/blog/_section_close_post.html.twig" %}
 
     {% include "blog/voting_filters.html.twig" %}
     {% include "blog/categories_list.html.twig" %}

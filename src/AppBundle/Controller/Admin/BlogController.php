@@ -11,7 +11,6 @@
 
 namespace AppBundle\Controller\Admin;
 
-use AppBundle\Entity\User;
 use AppBundle\Enum\FlashbagTypeEnum;
 use AppBundle\Event\PostEvent;
 use AppBundle\Form\PostType;
@@ -22,7 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use AppBundle\Entity\Post;
 use AppBundle\Security\Authorization\Voter\PostVoter;
-use AppBundle\Services\Notification\PostNotifier;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -258,7 +256,9 @@ class BlogController extends Controller
 
         $this->onChangePostState($post);
 
-        return $this->redirectToRoute('admin_post_show', array('id' => $post->getId()));
+        return $this->redirect(
+            $request->headers->get('referer', $this->generateUrl('admin_post_show', ['id' => $post->getId()]))
+        );
     }
 
     /**

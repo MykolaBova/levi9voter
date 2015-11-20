@@ -59,7 +59,7 @@ services:
     app.service.notifier:
         abstract:  true
         class:     AppBundle\Services\Notification\AbstractNotifier
-        arguments: [@app.service.mailer, @templating, @translator, %security.admin_emails%]
+        arguments: [@app.service.mailer, @templating, @translator]
 
     app.service.notifier.post:
         class:  AppBundle\Services\Notification\PostNotifier
