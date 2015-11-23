@@ -49,11 +49,11 @@ parameters:
     secret: 'secret_value_for_symfony_demo_application'
 
     security.admin_emails:
-        - m.popova@levi9.com
-        - a.trikopa@levi9.com
-        - o.volkov@levi9.com
-        - m.labinskyi@levi9.com
-        - a.pirog@levi9.com
+        #- m.popova@levi9.com
+        #- a.trikopa@levi9.com
+        #- o.volkov@levi9.com
+        #- m.labinskyi@levi9.com
+        #- a.pirog@levi9.com
         - i.shugaiev@levi9.com
 
     riper.security.active_directory.settings:
