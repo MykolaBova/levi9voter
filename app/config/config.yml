@@ -95,3 +95,17 @@ swiftmailer:
     username:       "%mailer_user%"
     password:       "%mailer_password%"
     spool:     { type: memory }
+
+stfalcon_tinymce:
+    language: %locale%
+    theme:
+        # Advanced theme with almost all enabled plugins
+        advanced:
+             plugins:
+                 - "advlist autolink lists link image charmap print preview hr anchor pagebreak"
+                 - "searchreplace wordcount visualblocks visualchars code fullscreen"
+                 - "media nonbreaking save table contextmenu directionality"
+                 - "template paste textcolor"
+             toolbar1: "styleselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+             toolbar2: "preview media"
+             image_advtab: true
