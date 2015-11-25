@@ -22,7 +22,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new AppBundle\AppBundle(),
-            new Riper\Security\ActiveDirectoryBundle\RiperActiveDirectoryBundle()
+            new Riper\Security\ActiveDirectoryBundle\RiperActiveDirectoryBundle(),
+            new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
         );
 
         // Some bundles are only used while developing the application or during

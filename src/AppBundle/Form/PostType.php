@@ -48,7 +48,7 @@ class PostType extends AbstractType
             ))
             ->add('summary', 'textarea', array('label' => 'label.summary'))
             ->add('content', 'textarea', array(
-                'attr' => array('rows' => 20),
+                'attr' => array('rows' => 20, 'class' => 'tinymce', 'data-theme' => 'advanced'),
                 'label' => 'label.content',
             ))
         ;

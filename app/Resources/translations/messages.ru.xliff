@@ -162,6 +162,14 @@
                 <source>action.browse_admin</source>
                 <target>Перейти в панель управления</target>
             </trans-unit>
+            <trans-unit id="admin.votes.list.title">
+                <source>admin.votes.list.title</source>
+                <target>Панель управления</target>
+            </trans-unit>
+            <trans-unit id="votes.list.title">
+                <source>votes.list.title</source>
+                <target>Сайт</target>
+            </trans-unit>
             <trans-unit id="action.publish_post">
                 <source>action.publish_post</source>
                 <target>Опубликовать</target>
