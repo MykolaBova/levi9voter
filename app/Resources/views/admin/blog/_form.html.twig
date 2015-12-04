@@ -42,7 +42,7 @@
         xhr.onload = function() {
             if (this.status == 200) {
                 var response = JSON.parse(this.response);
-                var image =  response.image;
+                var image = response.image;
                 $('.mce-btn.mce-open').parent().find('.mce-textbox').val(image).closest('.mce-window').find('.mce-primary').click();
             } else {
                 alert('File has not been uploaded');

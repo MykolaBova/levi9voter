@@ -38,7 +38,7 @@ class UploadController extends Controller
             $em->flush();
 
             return new JsonResponse(array(
-                    'image' => $image->getWebPath()
+                'image' => $image->getWebPath()
             ));
         }
 
