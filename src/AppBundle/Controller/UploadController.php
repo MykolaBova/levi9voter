@@ -42,6 +42,6 @@ class UploadController extends Controller
             ));
         }
 
-        return new JsonResponse('An error has occurred', 500);
+        return new JsonResponse('An error has occurred', 400);
     }
 }
