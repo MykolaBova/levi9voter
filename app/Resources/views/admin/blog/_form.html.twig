@@ -27,4 +27,38 @@
     </a>
 
 {{ form_end(form) }}
+
+<input type="file" name="upload[file]" id="upload_file" accept="image/*" class="hidden"/>
+
+<script>
+    document.querySelector('#upload_file').addEventListener('change', function(e) {
+        var formData = new FormData();
+        formData.append("upload[file]", this.files[0]);
+        this.value = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "{{ path('image_upload') }}", true);
+
+        xhr.onload = function() {
+            if (this.status == 200) {
+                var response = JSON.parse(this.response);
+                var image = response.image;
+                $('.mce-btn.mce-open').parent().find('.mce-textbox').val(image).closest('.mce-window').find('.mce-primary').click();
+            } else {
+                alert('File has not been uploaded');
+            }
+        };
+
+        xhr.send(formData);
+    }, false);
+
+    function callback_tinymce_init(editor) {
+        editor.settings.file_browser_callback = function(field_name, url, type, win) {
+            if (type == 'image') {
+                $('#upload_file').click();
+            }
+        }
+    }
+</script>
+
 {{ tinymce_init() }}

@@ -109,3 +109,4 @@ stfalcon_tinymce:
              toolbar1: "styleselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
              toolbar2: "preview media"
              image_advtab: true
+    use_callback_tinymce_init: true
