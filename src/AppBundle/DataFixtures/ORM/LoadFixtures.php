@@ -92,9 +92,10 @@ class LoadFixtures implements FixtureInterface, ContainerAwareInterface
             'email' => 'fakeuser2@levi9.com'
         ]);
 
-        foreach (range(1, 5) as $i) {
+        foreach (range(1, 15) as $i) {
             $post = new Post();
 
+            /** @var User $author */
             $post
                 ->setTitle($this->getRandomPostTitle() . ' ' . uniqid())
                 ->setSummary($this->getRandomPostSummary())
